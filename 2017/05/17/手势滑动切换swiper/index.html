@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="首次打开一款APP通常都会看到一个能左右来回滑动的页面，这个页面称作引导页。APP的引导页按目的区分可分为功能介绍类、使用说明类、推广类和问题解决类等。总之，掌握如何做引导页是一个H5开发者所需要掌握的技能。入门级开发者要自己写一个引导页并不容易，引导页做起来并不简单，因为它涉及到移动端的touch以及手势等概念，往往图省事的人会去找度娘要一个现成的,比如swiper。swiper用着不错，但是我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTML5引导页需求实现">
+<meta property="og:url" content="https://wrgLogan.github.io/2017/05/17/手势滑动切换swiper/index.html">
+<meta property="og:site_name" content="Logan的博客">
+<meta property="og:description" content="首次打开一款APP通常都会看到一个能左右来回滑动的页面，这个页面称作引导页。APP的引导页按目的区分可分为功能介绍类、使用说明类、推广类和问题解决类等。总之，掌握如何做引导页是一个H5开发者所需要掌握的技能。入门级开发者要自己写一个引导页并不容易，引导页做起来并不简单，因为它涉及到移动端的touch以及手势等概念，往往图省事的人会去找度娘要一个现成的,比如swiper。swiper用着不错，但是我">
+<meta property="og:updated_time" content="2017-07-17T14:03:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTML5引导页需求实现">
+<meta name="twitter:description" content="首次打开一款APP通常都会看到一个能左右来回滑动的页面，这个页面称作引导页。APP的引导页按目的区分可分为功能介绍类、使用说明类、推广类和问题解决类等。总之，掌握如何做引导页是一个H5开发者所需要掌握的技能。入门级开发者要自己写一个引导页并不容易，引导页做起来并不简单，因为它涉及到移动端的touch以及手势等概念，往往图省事的人会去找度娘要一个现成的,比如swiper。swiper用着不错，但是我">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wrgLogan.github.io/2017/05/17/手势滑动切换swiper/"/>
+
+
+
+
+
+  <title>HTML5引导页需求实现 | Logan的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Logan的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/05/17/手势滑动切换swiper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="吴榕根">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Logan的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HTML5引导页需求实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-17T15:53:43+08:00">
+                2017-05-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>首次打开一款APP通常都会看到一个能左右来回滑动的页面，这个页面称作引导页。APP的引导页按目的区分可分为功能介绍类、使用说明类、推广类和问题解决类等。总之，掌握如何做引导页是一个H5开发者所需要掌握的技能。入门级开发者要自己写一个引导页并不容易，引导页做起来并不简单，因为它涉及到移动端的touch以及手势等概念，往往图省事的人会去找度娘要一个现成的,比如<a href="http://www.swiper.com.cn/" target="_blank" rel="external">swiper</a>。swiper用着不错，但是我还是觉得太重，我是一个有能力就要自己写自己想要插件的人。</p>
+<p>那么开始吧。</p>
+<h1 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h1><p>我总结出来的引导页特点有下面几点：</p>
+<ul>
+<li>拖住页面，页面左右跟随手指</li>
+<li>松开页面，当页面超过一定距离时切换到下一页</li>
+<li>短时间内快速滑过，切换到下一页</li>
+</ul>
+<h1 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h1><p>需求分析到位了，接下来就要找到能够完美实现功能的技术方案。</p>
+<h2 id="1-基于页面的滚动scroll来实现"><a href="#1-基于页面的滚动scroll来实现" class="headerlink" title="1.基于页面的滚动scroll来实现"></a>1.基于页面的滚动scroll来实现</h2><p>这个方案当初实践之前觉得可行，页面的滚动是自带的，我不需要写代码控制拖动的效果，so easy。但是实现过程中由于ios的safari以及安卓chrome的两个webview对于滚动的实现差异太大，并且safari上对scroll并不是完全可控，故放弃了，没有继续走这条路。</p>
+<h2 id="2-基于css3的transition和transform控制动画实现"><a href="#2-基于css3的transition和transform控制动画实现" class="headerlink" title="2.基于css3的transition和transform控制动画实现"></a>2.基于css3的transition和transform控制动画实现</h2><p>这个方案的好处在于，你可以随心所欲控制每一个动画过程，难点也是如此，所有动画都要自己写。至于为什么选择transition和transform因为这个方案是移动端写动画最为流畅的方案了。（千万不要用jQuery的animate）</p>
+<p><a href="https://github.com/wrgLogan/loganSwiper.git" target="_blank" rel="external">项目github链接</a></p>
+<p>javascript<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Swiper = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="comment">// 私有变量</span></div><div class="line">    <span class="keyword">var</span> WINDOW_WIDTH = $(<span class="built_in">window</span>).width();</div><div class="line">    <span class="keyword">var</span> originalX = <span class="literal">null</span>;</div><div class="line">    <span class="keyword">var</span> originalTime = <span class="literal">null</span>;</div><div class="line">    <span class="keyword">var</span> nowX = <span class="literal">null</span>;</div><div class="line">    <span class="keyword">var</span> endTime = <span class="literal">null</span>;</div><div class="line">    <span class="keyword">var</span> moveX = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> Swiper = <span class="function"><span class="keyword">function</span>(<span class="params">el</span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.container = $(el);</div><div class="line">        <span class="keyword">this</span>.slideItems = <span class="keyword">this</span>.container.find(<span class="string">'.swiper-item'</span>);</div><div class="line">        <span class="keyword">this</span>.slideIndex = <span class="number">0</span>;</div><div class="line">        <span class="keyword">this</span>.pagis = $(<span class="string">'.swiper-pagination'</span>).find(<span class="string">'.pagi'</span>);</div><div class="line">        <span class="keyword">this</span>.lock = <span class="literal">false</span>;</div><div class="line">        <span class="keyword">this</span>.init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Swiper.prototype.init = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> swiper = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> container = swiper.container;</div><div class="line">        <span class="keyword">var</span> slideItems = swiper.slideItems;</div><div class="line">        <span class="keyword">var</span> ITEMS_NUM = slideItems.length;</div><div class="line">        </div><div class="line">        <span class="comment">// 容器宽度 == item个数 * 页面宽</span></div><div class="line">        container.css(<span class="string">"width"</span>, ITEMS_NUM * WINDOW_WIDTH);</div><div class="line"></div><div class="line">        swiper.onTouch();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Swiper.prototype.slideTo = <span class="function"><span class="keyword">function</span>(<span class="params">pageIndex</span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> swiper = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> slideItems = swiper.slideItems;</div><div class="line">        <span class="keyword">var</span> ITEMS_NUM = slideItems.length;</div><div class="line">        <span class="keyword">var</span> container = swiper.container;</div><div class="line">        swiper.lock = <span class="literal">true</span>;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (pageIndex &gt; ITEMS_NUM - <span class="number">1</span>) &#123;</div><div class="line">            <span class="keyword">var</span> pageIndex = ITEMS_NUM - <span class="number">1</span>;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (pageIndex &lt; <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">var</span> pageIndex = <span class="number">0</span>;</div><div class="line">        &#125;;</div><div class="line"></div><div class="line">        container.css(&#123;</div><div class="line">            <span class="string">"transition"</span>: <span class="string">"transform .3s ease-out"</span></div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            container.css(&#123;</div><div class="line">                <span class="string">"transform"</span>: <span class="string">"translate3d("</span> + (- pageIndex * WINDOW_WIDTH) + <span class="string">"px,0,0)"</span></div><div class="line">            &#125;);</div><div class="line"></div><div class="line">            setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">                container.css(&#123;</div><div class="line">                    <span class="string">"transition"</span>: <span class="string">"none"</span></div><div class="line">                &#125;);</div><div class="line"></div><div class="line">                swiper.lock = <span class="literal">false</span>;</div><div class="line">            &#125;, <span class="number">300</span>)</div><div class="line">        &#125;, <span class="number">10</span>);</div><div class="line"></div><div class="line">        slideItems.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            $(<span class="keyword">this</span>).removeClass(<span class="string">"active"</span>);</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        swiper.pagis.each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            $(<span class="keyword">this</span>).removeClass(<span class="string">"active"</span>);</div><div class="line">        &#125;)</div><div class="line"></div><div class="line">        slideItems.eq(pageIndex).addClass(<span class="string">"active"</span>);</div><div class="line">        swiper.pagis.eq(pageIndex).addClass(<span class="string">"active"</span>);</div><div class="line">        swiper.slideIndex = pageIndex;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Swiper.prototype.onTouch = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> swiper = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> container = swiper.container;</div><div class="line">        <span class="keyword">var</span> slideItems = swiper.slideItems;</div><div class="line">        <span class="keyword">var</span> ITEMS_NUM = slideItems.length;</div><div class="line">        </div><div class="line">        <span class="comment">// 按下</span></div><div class="line">        container.on(<span class="string">'touchstart'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">evt</span>) </span>&#123;</div><div class="line">            </div><div class="line">            <span class="keyword">if</span> (swiper.lock) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">            <span class="keyword">var</span> touch = evt.originalEvent.targetTouches[<span class="number">0</span>];</div><div class="line">            originalX = touch.clientX;</div><div class="line">            originalTime = <span class="built_in">Date</span>.now();</div><div class="line"></div><div class="line">            container.css(&#123;</div><div class="line">                <span class="string">"transition"</span>: <span class="string">"transform 100ms ease-out"</span></div><div class="line">            &#125;);</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="comment">// 移动</span></div><div class="line">        container.on(<span class="string">'touchmove'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">evt</span>) </span>&#123;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (swiper.lock) <span class="keyword">return</span>;</div><div class="line">            <span class="keyword">if</span> (!originalX) <span class="keyword">return</span>;</div><div class="line">            </div><div class="line">            <span class="keyword">var</span> touch = evt.originalEvent.targetTouches[<span class="number">0</span>];</div><div class="line">            <span class="keyword">var</span> slideIndex = swiper.slideIndex;</div><div class="line"></div><div class="line">            nowX = touch.clientX;</div><div class="line">            <span class="keyword">var</span> offsetX = nowX - originalX;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> ((slideIndex == swiper.slideItems.length - <span class="number">1</span> &amp;&amp; offsetX &lt; <span class="number">0</span>) || (slideIndex == <span class="number">0</span> &amp;&amp; offsetX &gt;<span class="number">0</span>)) &#123;</div><div class="line">                offsetX = offsetX / <span class="number">3</span>;</div><div class="line">            &#125;;</div><div class="line"></div><div class="line">            moveX = (- slideIndex * WINDOW_WIDTH + offsetX);</div><div class="line"></div><div class="line">            container.css(&#123;</div><div class="line">                <span class="attr">transform</span>: <span class="string">"translate3d("</span> + moveX + <span class="string">"px,0,0)"</span></div><div class="line">            &#125;);</div><div class="line">            </div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        <span class="comment">// 松开</span></div><div class="line">        container.on(<span class="string">'touchend'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">evt</span>) </span>&#123;</div><div class="line">            </div><div class="line">            endTime = <span class="built_in">Date</span>.now();</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (swiper.lock) <span class="keyword">return</span>;</div><div class="line">            <span class="keyword">if</span> (!nowX) <span class="keyword">return</span>;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (endTime - originalTime &lt; <span class="number">300</span>) &#123;</div><div class="line">                <span class="built_in">console</span>.log((nowX - originalX)/(endTime - originalTime));</div><div class="line">                <span class="keyword">if</span> ((nowX - originalX)/(endTime - originalTime) &lt; <span class="number">-0.25</span>) &#123;</div><div class="line">                    swiper.slideTo(swiper.slideIndex + <span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((nowX - originalX)/(endTime - originalTime) &gt; <span class="number">0.25</span>) &#123;</div><div class="line">                    swiper.slideTo(swiper.slideIndex - <span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    swiper.slideTo(swiper.slideIndex);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">if</span> ((nowX - originalX) &lt; -(WINDOW_WIDTH/<span class="number">3</span>)) &#123;</div><div class="line">                    swiper.slideTo(swiper.slideIndex + <span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> ((nowX - originalX) &gt; (WINDOW_WIDTH/<span class="number">3</span>)) &#123;</div><div class="line">                    swiper.slideTo(swiper.slideIndex - <span class="number">1</span>);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    swiper.slideTo(swiper.slideIndex);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            </div><div class="line">            endTime = <span class="literal">null</span>;</div><div class="line">            originalTime = <span class="literal">null</span>;</div><div class="line">            originalX = <span class="literal">null</span>;</div><div class="line">            nowX = <span class="literal">null</span>;</div><div class="line">            moveX = <span class="number">0</span>;</div><div class="line">        &#125;);</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> Swiper;</div><div class="line">&#125;)()</div><div class="line"></div><div class="line"><span class="comment">// 调用</span></div><div class="line"><span class="keyword">var</span> swiper = <span class="keyword">new</span> Swiper(<span class="string">'.swiper-wrapper'</span>);</div></pre></td></tr></table></figure></p>
+<p>html<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">   <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"swiper-container"</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"swiper-wrapper"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"swiper-item"</span>&gt;</span></div><div class="line">			<span class="comment">&lt;!--...  --&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"swiper-item"</span>&gt;</span></div><div class="line">			<span class="comment">&lt;!--...  --&gt;</span></div><div class="line">		<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"swiper-pagination"</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"pagi active"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"pagi"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>css<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="selector-class">.swiper-container</span>&#123;</div><div class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">100%</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.swiper-wrapper</span>&#123;</div><div class="line">    <span class="attribute">display</span>: flex;</div><div class="line">    <span class="attribute">display</span>: -webkit-flex; </div><div class="line">    <span class="attribute">flex-wrap</span>: nowrap; </div><div class="line">    <span class="attribute">width</span>: <span class="number">200%</span>;</div><div class="line">    <span class="attribute">width</span>: <span class="number">200vw</span>; </div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="selector-class">.swiper-item</span>&#123;	</div><div class="line">    <span class="attribute">position</span>: relative;</div><div class="line">    <span class="attribute">width</span>: <span class="number">100%</span>;</div><div class="line">    <span class="attribute">height</span>: <span class="number">100vh</span>;</div><div class="line">    <span class="attribute">background-size</span>: cover;</div><div class="line">    <span class="attribute">background-position</span>: center; </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/02/基于jQuery的DOM无关事件/" rel="next" title="基于jQuery的DOM无关事件">
+                <i class="fa fa-chevron-left"></i> 基于jQuery的DOM无关事件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/16/我的简历/" rel="prev" title="我的简历">
+                我的简历 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/logan.jpg"
+               alt="吴榕根" />
+          <p class="site-author-name" itemprop="name">吴榕根</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#需求分析"><span class="nav-number">1.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现方案"><span class="nav-number">2.</span> <span class="nav-text">实现方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-基于页面的滚动scroll来实现"><span class="nav-number">2.1.</span> <span class="nav-text">1.基于页面的滚动scroll来实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-基于css3的transition和transform控制动画实现"><span class="nav-number">2.2.</span> <span class="nav-text">2.基于css3的transition和transform控制动画实现</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">吴榕根</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
