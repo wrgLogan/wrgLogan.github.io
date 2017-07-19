@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="原文地址：https://github.com/abcrun/abcrun.github.com/issues/17Chrome基于Webkit内核进行封装，采用了多进程/线程模型。当用户访问网页时，大致的流程是这样的：打开浏览器，Browser进程启动，首先由UI线程来处理界面基本信息(如创建tab页等)，当用户输入URL后，UI线程将任务交给IO线程来处理，然后将结果传递给Render进程，R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图解浏览器渲染过程 - 基于Webkit&#x2F;Blink内核Chrome浏览器">
+<meta property="og:url" content="https://wrgLogan.github.io/2017/02/19/浏览器渲染过程/index.html">
+<meta property="og:site_name" content="Logan的博客">
+<meta property="og:description" content="原文地址：https://github.com/abcrun/abcrun.github.com/issues/17Chrome基于Webkit内核进行封装，采用了多进程/线程模型。当用户访问网页时，大致的流程是这样的：打开浏览器，Browser进程启动，首先由UI线程来处理界面基本信息(如创建tab页等)，当用户输入URL后，UI线程将任务交给IO线程来处理，然后将结果传递给Render进程，R">
+<meta property="og:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/chrome_full.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/resourceLoader.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/htmlParser.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/renderObject.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/renderLayer.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/render.png">
+<meta property="og:updated_time" content="2017-07-19T06:25:39.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图解浏览器渲染过程 - 基于Webkit&#x2F;Blink内核Chrome浏览器">
+<meta name="twitter:description" content="原文地址：https://github.com/abcrun/abcrun.github.com/issues/17Chrome基于Webkit内核进行封装，采用了多进程/线程模型。当用户访问网页时，大致的流程是这样的：打开浏览器，Browser进程启动，首先由UI线程来处理界面基本信息(如创建tab页等)，当用户输入URL后，UI线程将任务交给IO线程来处理，然后将结果传递给Render进程，R">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/chrome_full.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wrgLogan.github.io/2017/02/19/浏览器渲染过程/"/>
+
+
+
+
+
+  <title>图解浏览器渲染过程 - 基于Webkit/Blink内核Chrome浏览器 | Logan的博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Logan的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/02/19/浏览器渲染过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="吴榕根">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Logan的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">图解浏览器渲染过程 - 基于Webkit/Blink内核Chrome浏览器</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-19T14:18:12+08:00">
+                2017-02-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文地址：<a href="https://github.com/abcrun/abcrun.github.com/issues/17" target="_blank" rel="external">https://github.com/abcrun/abcrun.github.com/issues/17</a><br>Chrome基于Webkit内核进行封装，采用了多进程/线程模型。当用户访问网页时，大致的流程是这样的：<br>打开浏览器，Browser进程启动，首先由UI线程来处理界面基本信息(如创建tab页等)，当用户输入URL后，UI线程将任务交给IO线程来处理，然后将结果传递给Render进程，Render进程的IO线程经过简单分析后，将解释后的结果交给渲染线程，渲染线程接受请求加载网页并渲染网页。在加载和渲染过程中，可能会需要Browser进程获取相关的资源(如果CSS文件，图片，音频视频等)和GPU进程帮助渲染，这时Render进程会通过IO线程通知Browser进程或者GPU进程进行相关的任务。详细的过程随后将会以图片形式详细说明。</p>
+<h1 id="Chrome浏览器多进程-线程模型"><a href="#Chrome浏览器多进程-线程模型" class="headerlink" title="Chrome浏览器多进程/线程模型"></a>Chrome浏览器多进程/线程模型</h1><p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/chrome_full.png" alt="Chrome浏览器多进程/线程模型"></p>
+<p>Chrome浏览器包含多个进程，其中Browser进程是主进程，管理着各个Tab页，UI操作，资源请求等；Render进程主要用于渲染网页，Render进程可以包含多个；GPU进程用于处理渲染硬件加速；而NPAPI和Pepper进程与浏览器插件相关。</p>
+<h1 id="资源请求与加载过程"><a href="#资源请求与加载过程" class="headerlink" title="资源请求与加载过程"></a>资源请求与加载过程</h1><p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/resourceLoader.png" alt="资源请求与加载过程"></p>
+<p>当用户访问某一地址时，可以分为两种情况：</p>
+<p>根据是否有本地缓存(本地缓存是否需要更新)来请求网络资源<br>当点击前进/后退按钮时，从浏览器缓存池里面判断是否有缓存资源，如果没有则需要网络请求<br>页面资源有好多种，每种资源都有对应的资源加载器，如图片资源加载器imageLoader，在解析过程中当需要加载资源时，render进程会通知Browser进程加载资源，然后将加载后的资源通知给render进程。关于渲染过程见下图。</p>
+<h1 id="渲染过程"><a href="#渲染过程" class="headerlink" title="渲染过程"></a>渲染过程</h1><p>由于渲染的内容比较多，图片也比较大，为了便于阅读，我将图片分成三部分展示，最后也会附上渲染过程的全图。</p>
+<h3 id="HTMLParser-gt-DOM"><a href="#HTMLParser-gt-DOM" class="headerlink" title="HTMLParser -&gt; DOM"></a>HTMLParser -&gt; DOM</h3><p>首先是HTMLParser创建DOM树的过程，Render进程会创建一个html解释线程用于分析经过浏览器转码后的字符串，经过词法分析，安全处理等，然后调用主进程构建DOM树。当解释后是Script脚本时将会阻塞渲染线程,调用Javascript线程执行脚本代码，当然此时chrome为防止阻塞影响到后面可能存在的资源加载，会与扫描后面的代码是否有需要加载资源的，如果有则交个Browser进程去加载资源，然后才执行Script代码；如果遇到CSS样式代码时，将会对CSS样式规则进行解析保存到DocumentRuleSets对象中备用，便于创建Node节点时构建RenderObject和RenderLayer使用。</p>
+<p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/htmlParser.png" alt=""></p>
+<h3 id="RenderObject"><a href="#RenderObject" class="headerlink" title="RenderObject"></a>RenderObject</h3><p>上面谈到的保存的样式规则对象(DocumentRuleSets)，在创建DOM树Node节点元素后，Element会依次调用attach函数检测是否需要创建RenderObject对象，RenderObject对象从DocumentRuleSets里查找当前元素匹配的所有样式规则并排序，计算出当前节点的位置等最终的样式信息保存在RenderObject对象中。</p>
+<p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/renderObject.png" alt=""></p>
+<h3 id="RenderLayer与渲染绘制"><a href="#RenderLayer与渲染绘制" class="headerlink" title="RenderLayer与渲染绘制"></a>RenderLayer与渲染绘制</h3><p>网页本身包含框结构和层次结构，框结构主要是指iframe，而层次结构就是这里说的renderLayer了，网页分成不同的层次主要是出于渲染考虑的，图中有详细说明。</p>
+<p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/renderLayer.png" alt=""></p>
+<h3 id="渲染全图"><a href="#渲染全图" class="headerlink" title="渲染全图"></a>渲染全图</h3><p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/render.png" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/10/13/解决H5应用300ms延迟/" rel="next" title="touch模拟click解决H5应用点击300ms延迟问题">
+                <i class="fa fa-chevron-left"></i> touch模拟click解决H5应用点击300ms延迟问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/02/基于jQuery的DOM无关事件/" rel="prev" title="基于jQuery的DOM无关事件">
+                基于jQuery的DOM无关事件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/logan.jpg"
+               alt="吴榕根" />
+          <p class="site-author-name" itemprop="name">吴榕根</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Chrome浏览器多进程-线程模型"><span class="nav-number">1.</span> <span class="nav-text">Chrome浏览器多进程/线程模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#资源请求与加载过程"><span class="nav-number">2.</span> <span class="nav-text">资源请求与加载过程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#渲染过程"><span class="nav-number">3.</span> <span class="nav-text">渲染过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTMLParser-gt-DOM"><span class="nav-number">3.0.1.</span> <span class="nav-text">HTMLParser -> DOM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RenderObject"><span class="nav-number">3.0.2.</span> <span class="nav-text">RenderObject</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RenderLayer与渲染绘制"><span class="nav-number">3.0.3.</span> <span class="nav-text">RenderLayer与渲染绘制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渲染全图"><span class="nav-number">3.0.4.</span> <span class="nav-text">渲染全图</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">吴榕根</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

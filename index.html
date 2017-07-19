@@ -743,6 +743,199 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/03/05/web优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="吴榕根">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Logan的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/05/web优化/" itemprop="url">web优化</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-05T15:35:55+08:00">
+                2017-03-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>1、减少HTTP请求</p>
+<p>合并图片（如css sprites，内置图片使用数据）、合并CSS、JS，这一点很重要，但是要考虑合并后的文件体积。80％的最终用户响应时间花费在前端。 大部分时间是绑在下载中的页面中的所有组成部分：图像，样式表，脚本，Flash等减少部件数量又减少呈现页面所需的HTTP请求的数目。 这是关键，更快的网页。</p>
+<p>以减少在页面部件数量的一种方法是，以简化的页面设计。 但是，有没有方法来构建更丰富的内容页面，同时实现快速的响应时间？ 下面是一些技术来减少HTTP请求的数量，同时仍支持丰富的页面设计。</p>
+<p>合并的文件是一个通过所有脚本组合成一个单一的脚本，并且类似地结合所有的CSS成单个样式表来减少HTTP请求的数目。 合并文件是更具挑战性的时候，脚本和样式变化一页一页地，却使得这部分的释放过程中提高响应时间。</p>
+<p>2、使用CDN（内容分发网络）</p>
+<p>最终用户的响应时间80％-90％是花在下载的所有组件中的页面：图片，样式，脚本等</p>
+<p>这里可以关注CDN的三类实现：镜像、高速缓存、专线，以及智能路由器和负载均衡；</p>
+<p>3、为文件头指定Expires或Cache-Control，使内容具有缓存性。</p>
+<p>区分静态内容和动态内容，避免以后页面访问中不必要的HTTP请求。<br>对于静态组件：实现“永不过期”的政策通过设置不远的将来Expires头<br>对于动态组件：使用适当Cache-Control头，帮助有条件的请求浏览器，网页设计是越来越丰富，这意味着更多的脚本，样式表，图片和Flash的页面。 首次访客到你的页面可能要进行多次HTTP请求，但通过使用Expires头，你让这些组件缓存。 这样就避免了在后续页面访问量不必要的HTTP请求。 Expires头是最经常使用的图像，但他们应该在所有的组件，包括脚本，样式表和Flash组件使用。</p>
+<p>4、避免空的src和href</p>
+<p>留意具有这两个属性的标签如link，script，img，iframe等；</p>
+<p>5、使用gzip压缩内容</p>
+<p>Gzip压缩所有可能的文件类型以来减少文件体积</p>
+<p>6、把样式表放到顶部</p>
+<p>实现页面有秩序地加载，这对于拥有较多内容的页面和网速较慢的用户来说更为重要，同时，HTML规范清楚指出样式表要放包含在页面的<head>区域内；</head></p>
+<p>7、把JS放到底部</p>
+<p>HTTP/1.1 规范建议，浏览器每个主机名的并行下载内容不超过两个，而问题在于脚本阻止了页面的平行下载，即便是主机名不相同</p>
+<p>8、避免使用CSS表达式</p>
+<p>页面显示和缩放，滚动、乃至移动鼠标时，CSS表达式的计算频率是我们要关注的。可以考虑一次性的表达式或者使用事件句柄来代替CSS表达式。CSS表达式是一个功能强大的（和危险）的方式来动态设置CSS属性。 他们支持在Internet Explorer开始用5版本，但被废弃的开始与IE8。 作为一个例子，背景颜色可以被设置使用CSS表达式交替每隔一小时：</p>
+<p>css 代码<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">background-color: expression( (<span class="keyword">new</span> <span class="built_in">Date</span>()).getHours()%<span class="number">2</span> ? <span class="string">"#B8D4FF"</span> : <span class="string">"#F08A00"</span> );</div></pre></td></tr></table></figure></p>
+<p>如图所示，在expression方法接受一个JavaScript表达式。 CSS属性设置为评估JavaScript表达式的结果。 该expression方法被其他浏览器忽略，所以它是设置属性在Internet Explorer中需要创建跨浏览器提供一致的体验是有用的。</p>
+<p>9、将CSS和JS放到外部文件中</p>
+<p>在现实世界中使用的外部文件通常产生更快的页面，因为JavaScript和CSS文件由浏览器高速缓存。 JavaScript和CSS的内联在HTML文档获取下载HTML文档请求每次。 这减少了所需的HTTP请求的数量，但会增加HTML文档的大小。 另一方面，如果该JavaScript和CSS是在由浏览器高速缓存的外部文件，HTML文件的尺寸减小，而不增加HTTP请求的数目。我们需要权衡内置代码带来的HTTP请求减少与通过使用外部文件进行缓存带来的好处的折中点。</p>
+<p>10、减少DNS查询</p>
+<p>我们需要权衡减少 DNS查找次数和保持较高程度并行下载两者之间的关系。域名系统（DNS）映射主机名到IP地址，就像电话簿映射人的名字，以他们的电话号码。 当你键入www.yahoo.com到浏览器，由浏览器所接触的DNS解析返回该服务器的IP地址。 DNS是有成本的。 它通常需要20-120毫秒的DNS查找IP地址，一个给定的主机名。 直到DNS查询完成后，浏览器无法从该主机下载任何东西。<br>DNS查找高速缓存以提高性能。</p>
+<p>11、精简CSS和JS</p>
+<p>缩小时从代码中删除不必要的字符，以减小其尺寸，从而提高了加载时间的做法。 当代码是精缩所有的评论将被删除，以及不必要的空白字符（空格，换行和制表）。 在JavaScript的情况下，这改善了响应时间性能，因为所下载的文件的大小减小。 缩小JavaScript代码的两个流行的工具是JSMin和YUI压缩工具。 YUI的压缩机也可以缩小CSS。</p>
+<p>12、避免重定向</p>
+<p>重定向使用的301和302的状态码来完成的。重定向拖慢了用户体验。 插入用户和HTML文档之间的重定向延迟一切在因为没有在可以呈现该页面的页面和没有组件可以就被下载到HTML文档已经到来。为了确保“后退”按钮可以正确地使用，使用标准的 3XXHTTP状态代码；同域中注意避免反斜杠 “/” 的跳转；跨域使用 Alias或者 mod_rewirte建立 CNAME（保存一个域名和另外一个域名之间关系的DNS记录）</p>
+<p>13、剔除重复的JS和CSS</p>
+<p>重复调用脚本，除了增加额外的HTTP请求外，多次运算也会浪费时间。在IE和Firefox中不管脚本是否可缓存，它们都存在重复运算JavaScript的问题。</p>
+<p>14、配置ETags</p>
+<p>Entity tags（ETags）（实体标签）是web服务器和浏览器用于判断浏览器缓存中的内容和服务器中的原始内容是否匹配的一种机制（“实体”就是所说的“内 容”，包括图片、脚本、样式表等），是比last-modified date更更加灵活的机制，单位时间内文件被修过多次，Etag可以综合Inode(文件的索引节点(inode)数)，MTime(修改时间)和Size来精准的进行判断，避开UNIX记录MTime只能精确到秒的问题。 服务器集群使用，可取后两个参数。使用ETags减少Web应用带宽和负载。</p>
+<p>15、使得AJAX可缓存</p>
+<p>利用时间戳，更精巧的实现响应可缓存与服务器数据同步更新。好处是，它提供瞬时反馈给用户，因为它请求信息异步从后端网络服务器。 但是，使用Ajax是不能保证该用户将不被摆弄他的拇指等待这些异步JavaScript和XML响应返回。 在许多应用中，用户是否被保持等待取决于Ajax如何被使用。 例如，在一个基于Web的电子邮件客户端的用户将保持等待一个Ajax请求的结果发现所有符合他们的搜索条件的电子邮件。 重要的是要记住，“异步”并不意味着“瞬间”。</p>
+<p>16、尽早刷新输出缓冲</p>
+<p>尤其对于css，js文件的并行下载更有意义，当用户请求一个页面，它可以在任何地方，从200到500毫秒的后端服务器缝合在一起的HTML页面。在此期间，该浏览器是空闲，因为它等待数据到达。在PHP中有函数flush（）。它可以让你把你的部分准备HTML响应到浏览器，这样浏览器就可以开始获取组件，同时后端忙于在HTML页面的其余部分。这样做的好处主要是看到忙碌的后端或轻前端。</p>
+<p>17、使用GET的AJAX请求</p>
+<p>当使用XMLHttpRequest时，浏览器中的POST方法是一个“两步走”的过程：首先发送文件头，然后才发送数据。在url小于2K时使用GET获取数据时更加有意义。在雅虎 邮件研究小组发现，当使用XMLHttpRequest的，POST将在浏览器中实现为两个步骤：首先发送标题，然后发送数据。所以最好使用GET，只需要一个TCP数据包发送（除非你有很多的饼干）。最大URL长度在IE浏览器是2K，所以如果你发送超过2K的数据，你可能无法使用GET。一个有趣的影响是，POST没有实际公布任何数据的行为以获得更多信息。基于对HTTP规范，GET意味着用于检索信息，因此它是有道理的（语义）使用GET，当你只请求数据，而不是将数据发送到存储服务器端。</p>
+<p>18、延迟加载</p>
+<p>确定页面运行正常后，再加载脚本来实现如拖放和动画，或者是隐藏部分的内容以及折叠内容等。</p>
+<p>19、预加载</p>
+<p>关注下无条件加载，有条件加载和有预期的加载。</p>
+<p>20、减少DOM元素的数量</p>
+<p>使用更适合或者在语意是更贴切的标签，要考虑大量DOM元素中循环的性能开销。</p>
+<p>21、跨域分离组件</p>
+<p>拆分组件，您可以最大限度地提高并行下载。请确保您使用的是不超过2-4个域名，因为DNS查找处罚。例如，您可以承载你的HTML和动态内容的www.example.org和拆分静态组件之间static1.example.org和static2.example.org， 是最大限度地实现平行下载</p>
+<p>22、尽量减少iframe的个数</p>
+<p>考虑即使内容为空，加载也需要时间，会阻止页面加载，没有语意，注意iframe相对于其他DOM元素高出1-2个数量级的开销，它会在典型方式下阻塞onload事件，IE和Firefox中主页面样式表会阻塞它的下载。</p>
+<p><iframe>优点：</iframe></p>
+<p>有助于像徽章和广告慢第三方内容<br>安全沙箱<br>并行下载脚本</p>
+<p><iframe>的缺点：</iframe></p>
+<p>即使空白不惜血本<br>块页面的onload<br>非语义</p>
+<p>23、避免404</p>
+<p>HTTP请求是昂贵，因此使得HTTP请求，并得到一个无用的反应（即404未找到）是完全不必要的，并会减慢没有任何好处的用户体验。<br>HTTP请求时间消耗是很大的，有些站点把404错误响应页面改为“你是不是要找<em>*</em>”，这虽然改进了用户体验但是同样也会浪费服务器资源（如数据库等）。最糟糕的情况是指向外部 JavaScript的链接出现问题并返回404代码。首先，这种加载会破坏并行加载；其次浏览器会把试图在返回的404响应内容中找到可能有用的部分当作JavaScript代码来执行。</p>
+<p>24、减少Cookie的大小</p>
+<p>去除不必要的coockie<br>使coockie体积尽量小以减少对用户响应的影响<br>注意在适应级别的域名上设置coockie以便使子域名不受影响<br>设置合理的过期时间。较早地Expire时间和不要过早去清除coockie，都会改善用户的响应时间。</p>
+<p>25、使用无cookie的域</p>
+<p>确定对于静态内容的请求是无coockie的请求。创建一个子域名并用他来存放所有静态内容。</p>
+<p>26、最大限度减少DOM访问</p>
+<p>缓存已经访问过的有关元素<br>线下更新完节点之后再将它们添加到文档树中<br>避免使用JavaScript来修改页面布局</p>
+<p>27、开发智能事件处理程序</p>
+<p>有时候我们会感觉到页面反应迟钝，这是因为DOM树元素中附加了过多的事件句柄并且些事件句病被频繁地触发。这就是为什么说使用event delegation（事件代理）是一种好方法了。如果你在一个div中有10个按钮，你只需要在div上附加一次事件句柄就可以了，而不用去为每一个按 钮增加一个句柄。事件冒泡时你可以捕捉到事件并判断出是哪个事件发出的。<br>你同样也不用为了操作DOM树而等待onload事件的发生。你需要做的就是等待树结构中你要访问的元素出现。你也不用等待所有图像都加载完毕。<br>你可能会希望用DOMContentLoaded事件来代替 事件应用程序中的onAvailable方法。</p>
+<p>28、用<link>代替@import</p>
+<p>在IE中，页面底部@import和使用<link>作用是一样的，因此最好不要使用它。</p>
+<p>29、避免使用滤镜</p>
+<p>完全避免使用AlphaImageLoader的最好方法就是使用PNG8格式来代替，这种格式能在IE中很好地工作。如果你确实需要使用 AlphaImageLoader，请使用下划线_filter又使之对IE7以上版本的用户无效。</p>
+<p>30、优化图像</p>
+<p>尝试把GIF格式转换成PNG格式，看看是否节省空间。在所有的PNG图片上运行pngcrush（或者其它PNG优化工具）</p>
+<p>31、优化CSS Spirite</p>
+<p>CSS精灵是减少图像的请求的数量的优选的方法。 结合你的背景图像转换成一个单一的形象，并使用CSS background-image和background-position属性来显示所需的图像片段。<br>在Spirite中水平排列你的图片，垂直排列会稍稍增加文件大小；<br>Spirite中把颜色较近的组合在一起可以降低颜色数，理想状况是低于256色以便适用PNG8格式；<br>便于移动，不要在Spirite的图像中间留有较大空隙。这虽然不大会增加文件大小但对于用户代理来说它需要更少的内存来把图片解压为像素地图。 100×100的图片为1万像素，而1000×1000就是100万像素。</p>
+<p>32、不要在HTML中缩放图像——须权衡</p>
+<p>不要为了在HTML中设置长宽而使用比实际需要大的图片。如果你需要：</p>
+<p><img width="”100″" height="”100″" src="”mycat.jpg”" alt="”My" cat”=""></p>
+<p>那么你的图片（mycat.jpg）就应该是100×100像素而不是把一个500×500像素的图片缩小使用。这里在下文有更有趣的分析。</p>
+<p>33、favicon.ico要小和可缓存</p>
+<p>favicon.ico是位于服务器根目录下的一个图片文件。它是必定存在的，因为即使你不关心它是否有用，浏览器也会对它发出请求，因此最好不要返回一 个404 Not Found的响应。由于是在同一台服务器上，它每被请求一次coockie就会被发送一次。这个图片文件还会影响下载顺序，例如在IE中当你在 onload中请求额外的文件时，favicon会在这些额外内容被加载前下载。<br>因此，为了减少favicon.ico带来的弊端，要做到：<br>文件尽量地小，最好小于1K<br>在适当的时候（也就是你不要打算再换favicon.ico的时候，因为更换新文件时不能对它进行重命名）为它设置Expires文件头。你可以很安全地 把Expires文件头设置为未来的几个月。你可以通过核对当前favicon.ico的上次编辑时间来作出判断。<br>Imagemagick可以帮你创建小巧的favicon。</p>
+<p>34、保持单个内容小于25K</p>
+<p>因为iPhone不能缓存大于25K的文件。注意这里指的是解压缩后的大小。由于单纯gizp压缩可能达不要求，因此精简文件就显得十分重 要。</p>
+<p>35、打包组件成复合文本</p>
+<p>页面内容打包成复合文本就如同带有多附件的Email，它能够使你在一个HTTP请求中取得多个组件（切记：HTTP请求是很奢侈的）。当你使用这条规 则时，首先要确定用户代理是否支持（iPhone就不支持）。</p>
+<p>以上是为大家分享Yahoo对于性能优化的条例方案，他们把性能作为开发者的军规，严格要求性能，每一个细节都看的非常重要，这也是他们能够成为全球企业的基本表现，希望对于对性能感到困惑的开发者有所帮助。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/03/02/基于jQuery的DOM无关事件/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -815,6 +1008,131 @@
 <p>使用jQuery简单实现 <a href="http://gist.github.com/799721/c119783954e1b10551c4afef53b2c04fefcb7465" target="_blank" rel="external">代码来源</a><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*!</span></div><div class="line"> * jQuery Tiny Pub/Sub - v0.3 - 11/4/2010</div><div class="line"> * http://benalman.com/</div><div class="line"> * </div><div class="line"> * Copyright (c) 2010 "Cowboy" Ben Alman</div><div class="line"> * Dual licensed under the MIT and GPL licenses.</div><div class="line"> * http://benalman.com/about/license/</div><div class="line"> */</div><div class="line"></div><div class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">$</span>) </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">var</span> o = $(&#123;&#125;);</div><div class="line"></div><div class="line">    $.subscribe = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        o.bind.apply(o, <span class="built_in">arguments</span>);</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    $.unsubscribe = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        o.unbind.apply(o, <span class="built_in">arguments</span>);</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    $.publish = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        o.trigger.apply(o, <span class="built_in">arguments</span>);</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">&#125;)(jQuery);</div><div class="line"></div><div class="line"><span class="comment">// 结合使用命名空间来 订阅／发布 消息</span></div><div class="line"></div><div class="line">$.subscribe(<span class="string">'user:name'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">evt, options</span>) </span>&#123;  <span class="comment">// 订阅</span></div><div class="line">    <span class="built_in">console</span>.log(evt.type, options);</div><div class="line">   <span class="comment">/*......*/</span></div><div class="line">&#125;)</div><div class="line"></div><div class="line">$.publish(<span class="string">'user:name'</span>, &#123; <span class="attr">name</span>: <span class="string">'logan'</span> &#125;)  <span class="comment">// 发布</span></div></pre></td></tr></table></figure></p>
 <p>下面是一段原生js的实现代码<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> PubSub = &#123;</div><div class="line">    <span class="attr">subscribe</span>: <span class="function"><span class="keyword">function</span>(<span class="params">ev, callback</span>) </span>&#123;</div><div class="line">        <span class="comment">// 创建 _callbacks 对象，除非它已经存在了</span></div><div class="line">        <span class="keyword">var</span> calls = <span class="keyword">this</span>._callbacks || (<span class="keyword">this</span>._callbacks = &#123;&#125;);</div><div class="line">        <span class="comment">// 针对给定的事件key创建一个数组，除非这个数组已经存在</span></div><div class="line">        <span class="comment">// 然后将回调函数追加到这个数组中</span></div><div class="line">        (<span class="keyword">this</span>._callbacks[ev] || (<span class="keyword">this</span>._callbacks[ev] = [])).push(callback);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">publish</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="comment">// 将arguments对象转换为真正的数组</span></div><div class="line">        <span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 拿出第1个参数，即事件名称</span></div><div class="line">        <span class="keyword">var</span> ev = args[<span class="number">0</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 如果不存在_callbacks对象，则返回</span></div><div class="line">        <span class="comment">// 或者如果不包含给定事件对应的数组</span></div><div class="line"></div><div class="line">        <span class="keyword">var</span> list, calls, i, l;</div><div class="line">        <span class="keyword">if</span> (!(calls = <span class="keyword">this</span>._callbacks)) <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">if</span> (!(list = <span class="keyword">this</span>._callbacks[ev])) <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">        <span class="comment">// 触发回调</span></div><div class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>, l = list.length; i &lt; l; i++)</div><div class="line">            list[i].apply(<span class="keyword">this</span>, args);</div><div class="line"></div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">unsubscribe</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="comment">// 将arguments对象转换为真正的数组</span></div><div class="line">        <span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>, <span class="number">0</span>);</div><div class="line"></div><div class="line">        <span class="comment">// 拿出第1个参数，即事件名称</span></div><div class="line">        <span class="keyword">var</span> ev = args[<span class="number">0</span>];</div><div class="line"></div><div class="line">        <span class="comment">// 如果不存在_callbacks对象，则返回</span></div><div class="line">        <span class="comment">// 或者如果不包含给定事件对应的数组</span></div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>._callbacks) <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>._callbacks[ev]) <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line"></div><div class="line">        <span class="keyword">this</span>._callbacks[ev] = [];</div><div class="line">        </div><div class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
 <p>总结：这种模式有两个角色——订阅者和发布者，两者之间完全解耦。这在很多场景中非常 有用，包括对象关系映射(ORM)中的事件、状态机及当 Ajax 请求结束时的回调等场景。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/02/19/浏览器渲染过程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="吴榕根">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Logan的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/02/19/浏览器渲染过程/" itemprop="url">图解浏览器渲染过程 - 基于Webkit/Blink内核Chrome浏览器</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-19T14:18:12+08:00">
+                2017-02-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>原文地址：<a href="https://github.com/abcrun/abcrun.github.com/issues/17" target="_blank" rel="external">https://github.com/abcrun/abcrun.github.com/issues/17</a><br>Chrome基于Webkit内核进行封装，采用了多进程/线程模型。当用户访问网页时，大致的流程是这样的：<br>打开浏览器，Browser进程启动，首先由UI线程来处理界面基本信息(如创建tab页等)，当用户输入URL后，UI线程将任务交给IO线程来处理，然后将结果传递给Render进程，Render进程的IO线程经过简单分析后，将解释后的结果交给渲染线程，渲染线程接受请求加载网页并渲染网页。在加载和渲染过程中，可能会需要Browser进程获取相关的资源(如果CSS文件，图片，音频视频等)和GPU进程帮助渲染，这时Render进程会通过IO线程通知Browser进程或者GPU进程进行相关的任务。详细的过程随后将会以图片形式详细说明。</p>
+<h1 id="Chrome浏览器多进程-线程模型"><a href="#Chrome浏览器多进程-线程模型" class="headerlink" title="Chrome浏览器多进程/线程模型"></a>Chrome浏览器多进程/线程模型</h1><p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/chrome_full.png" alt="Chrome浏览器多进程/线程模型"></p>
+<p>Chrome浏览器包含多个进程，其中Browser进程是主进程，管理着各个Tab页，UI操作，资源请求等；Render进程主要用于渲染网页，Render进程可以包含多个；GPU进程用于处理渲染硬件加速；而NPAPI和Pepper进程与浏览器插件相关。</p>
+<h1 id="资源请求与加载过程"><a href="#资源请求与加载过程" class="headerlink" title="资源请求与加载过程"></a>资源请求与加载过程</h1><p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/resourceLoader.png" alt="资源请求与加载过程"></p>
+<p>当用户访问某一地址时，可以分为两种情况：</p>
+<p>根据是否有本地缓存(本地缓存是否需要更新)来请求网络资源<br>当点击前进/后退按钮时，从浏览器缓存池里面判断是否有缓存资源，如果没有则需要网络请求<br>页面资源有好多种，每种资源都有对应的资源加载器，如图片资源加载器imageLoader，在解析过程中当需要加载资源时，render进程会通知Browser进程加载资源，然后将加载后的资源通知给render进程。关于渲染过程见下图。</p>
+<h1 id="渲染过程"><a href="#渲染过程" class="headerlink" title="渲染过程"></a>渲染过程</h1><p>由于渲染的内容比较多，图片也比较大，为了便于阅读，我将图片分成三部分展示，最后也会附上渲染过程的全图。</p>
+<h3 id="HTMLParser-gt-DOM"><a href="#HTMLParser-gt-DOM" class="headerlink" title="HTMLParser -&gt; DOM"></a>HTMLParser -&gt; DOM</h3><p>首先是HTMLParser创建DOM树的过程，Render进程会创建一个html解释线程用于分析经过浏览器转码后的字符串，经过词法分析，安全处理等，然后调用主进程构建DOM树。当解释后是Script脚本时将会阻塞渲染线程,调用Javascript线程执行脚本代码，当然此时chrome为防止阻塞影响到后面可能存在的资源加载，会与扫描后面的代码是否有需要加载资源的，如果有则交个Browser进程去加载资源，然后才执行Script代码；如果遇到CSS样式代码时，将会对CSS样式规则进行解析保存到DocumentRuleSets对象中备用，便于创建Node节点时构建RenderObject和RenderLayer使用。</p>
+<p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/htmlParser.png" alt=""></p>
+<h3 id="RenderObject"><a href="#RenderObject" class="headerlink" title="RenderObject"></a>RenderObject</h3><p>上面谈到的保存的样式规则对象(DocumentRuleSets)，在创建DOM树Node节点元素后，Element会依次调用attach函数检测是否需要创建RenderObject对象，RenderObject对象从DocumentRuleSets里查找当前元素匹配的所有样式规则并排序，计算出当前节点的位置等最终的样式信息保存在RenderObject对象中。</p>
+<p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/renderObject.png" alt=""></p>
+<h3 id="RenderLayer与渲染绘制"><a href="#RenderLayer与渲染绘制" class="headerlink" title="RenderLayer与渲染绘制"></a>RenderLayer与渲染绘制</h3><p>网页本身包含框结构和层次结构，框结构主要是指iframe，而层次结构就是这里说的renderLayer了，网页分成不同的层次主要是出于渲染考虑的，图中有详细说明。</p>
+<p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/renderLayer.png" alt=""></p>
+<h3 id="渲染全图"><a href="#渲染全图" class="headerlink" title="渲染全图"></a>渲染全图</h3><p><img src="https://raw.githubusercontent.com/abcrun/abcrun.github.com/master/blog/chrome/images/render.png" alt=""></p>
 
           
         
@@ -1135,7 +1453,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
