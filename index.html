@@ -243,6 +243,131 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/07/24/H5应用ios和android浏览器兼容性问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="吴榕根">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/logan.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Logan的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/24/H5应用ios和android浏览器兼容性问题/" itemprop="url">H5应用ios和android浏览器兼容性问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T00:00:00+08:00">
+                2017-07-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>虽然说HTML5 APP开发主要是在ios Safari以及android Chrome这两个webkit内核上进行开发，遇到的兼容性问题相比于pc Web端所要面对的四大内核的不同渲染要容易些。但其实移动端Safari和Chrome之间的渲染还是有许多不同的，因此开发中也需要做好兼容性。</p>
+<h1 id="Safari和Chrome的不同滚动机制"><a href="#Safari和Chrome的不同滚动机制" class="headerlink" title="Safari和Chrome的不同滚动机制"></a>Safari和Chrome的不同滚动机制</h1><p>要说用户体验上Safari确实比Chrome更好，更精致。不得不提的就是优雅的滚动回弹效果，通常我都会加上下面这个css代码<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">*&#123;</div><div class="line">    <span class="attribute">-webkit-overflow-scrolling </span>: touch;  <span class="comment">/*滚动回弹效果*／</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>有了这个属性，Safari页面的滚动会带有惯性，滚到边界还会有回弹效果，不加的话是不能忍的。<br><!-- 在此效果下Safari的scrollTop值可以是负值，并且你没办法很自在地控制页面的滚动。 --><br>Safari的滚动机制和Chrome就是完全不同的两种模式，对其进行控制时要非常小心兼容性问题。</p>
+<h1 id="Safari给一些无法点击的元素绑定click事件会无法触发"><a href="#Safari给一些无法点击的元素绑定click事件会无法触发" class="headerlink" title="Safari给一些无法点击的元素绑定click事件会无法触发"></a>Safari给一些无法点击的元素绑定click事件会无法触发</h1><p>这个时候在css上加上<br><figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">*&#123;</div><div class="line">    <span class="attribute">cursor</span>: pointer;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>搞定！</p>
+<h1 id="写Dom动画往往在ios-Safari上流畅，在安卓Chrome上卡顿"><a href="#写Dom动画往往在ios-Safari上流畅，在安卓Chrome上卡顿" class="headerlink" title="写Dom动画往往在ios Safari上流畅，在安卓Chrome上卡顿"></a>写Dom动画往往在ios Safari上流畅，在安卓Chrome上卡顿</h1><p>这个问题是手机性能问题，ios手机性能较优跑H5动画无论是用jQuery.animate写还是css写都有明显的区别。<br>解决方案：这里涉及到移动端H5动画性能全面优化，目前我总结的优化方案有下面几点</p>
+<ul>
+<li>js写动画用requestAnimationFrame代替setInterval(setTimeout)</li>
+<li>控制DOM的transform去实现动画，可以避免页面的重绘和回流</li>
+<li>css3的transition优于js控制（js运行动画遇到阻塞会丢包）</li>
+<li>避免页面的重绘和回流所带来的影响（动画过程中不要对DOM取值，用css代替直接样式负值等等）</li>
+<li>开启GPU硬件加速<strong>translate3d(0,0,0)</strong></li>
+</ul>
+<h1 id="视频播放控件是不一样的"><a href="#视频播放控件是不一样的" class="headerlink" title="视频播放控件是不一样的"></a><video>视频播放控件是不一样的</video></h1><p><code>&lt;video&gt;</code>是各大厂商自己做的，不同很正常，用vide需谨慎。<br>说一点，ios Safari视频会自动全屏，在代码中我们可以在video标签加webkit-playsinline属性禁止掉。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2017/07/16/我的简历/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1417,133 +1542,13 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://wrgLogan.github.io/2016/05/22/macOS上配置VPN/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="吴榕根">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/logan.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Logan的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/22/macOS上配置VPN/" itemprop="url">macOS上配VPN.md</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-22T00:00:00+08:00">
-                2016-05-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1-安装Tunnelblick（OpenVPN客户端）"><a href="#1-安装Tunnelblick（OpenVPN客户端）" class="headerlink" title="1.安装Tunnelblick（OpenVPN客户端）"></a>1.安装Tunnelblick（OpenVPN客户端）</h2><p><a href="http://https://tunnelblick.net/downloads.html" target="_blank" rel="external">Tunnelblick戳这里下载</a></p>
-<p><img src="http://static.coolcto.com/@/20170610/d0f11317-dad7-4f4f-8d81-742c3bacee89/398-84e665523e61ea1b.png" alt="">[100%][100%]</p>
-<p>这里选 “我有配置文件” 就可以，这样就安装好了。</p>
-<h2 id="2-配置链接文件"><a href="#2-配置链接文件" class="headerlink" title="2.配置链接文件"></a>2.配置链接文件</h2><p>管理员会给你所有关于配置vpn链接的文件</p>
-<p><img src="http://static.coolcto.com/@/20170610/87d6ed8e-fbfc-427a-8af7-ea7151a8d5e1/398-9a5945d1e6b299c4.png" alt="">[100%][100%]</p>
-<p>把它们放在一个文件夹中，并把文件夹更名为 *.tblk </p>
-<p><img src="http://static.coolcto.com/@/20170610/5979f8ac-52bf-4980-96cc-e9d2bf363f7c/398-678292481bc4d118.png" alt="">[100%][100%]</p>
-<p>然后就得到了一个</p>
-<p><img src="http://static.coolcto.com/@/20170610/c6356af7-0437-4e72-b0ca-134e4548bfc6/屏幕快照 2017-06-10 上午12.19.23.png" alt="">[100%][100%]</p>
-<p>双击打开它，选择只是我，输入密码</p>
-<p><img src="http://static.coolcto.com/@/20170610/c6536f41-0d2a-44fe-84b8-1fd55cb9883a/屏幕快照 2017-06-10 上午12.20.25.png" alt="">[100%][100%]</p>
-<p>最后在右上角点击图标连接vpn就可以了</p>
-<p><img src="http://static.coolcto.com/@/20170610/bdcb2d81-946f-44e8-a6d6-4e4a6286c59e/屏幕快照 2017-06-10 上午12.23.35.png" alt="">[100%][100%]</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1587,7 +1592,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-count">11</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
