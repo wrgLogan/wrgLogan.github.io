@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://wrgLogan.github.io/2017/07/24/H5应用ios和android浏览器兼容性问题/index.html">
 <meta property="og:site_name" content="Logan的博客">
 <meta property="og:description" content="虽然说HTML5 APP开发主要是在ios Safari以及android Chrome这两个webkit内核上进行开发，遇到的兼容性问题相比于pc Web端所要面对的四大内核的不同渲染要容易些。但其实移动端Safari和Chrome之间的渲染还是有许多不同的，因此开发中也需要做好兼容性。 Safari和Chrome的不同滚动机制要说用户体验上Safari确实比Chrome更好，更精致。不得不提的">
-<meta property="og:updated_time" content="2017-07-23T18:08:08.000Z">
+<meta property="og:updated_time" content="2017-07-23T18:12:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="H5应用ios和android浏览器兼容性问题">
 <meta name="twitter:description" content="虽然说HTML5 APP开发主要是在ios Safari以及android Chrome这两个webkit内核上进行开发，遇到的兼容性问题相比于pc Web端所要面对的四大内核的不同渲染要容易些。但其实移动端Safari和Chrome之间的渲染还是有许多不同的，因此开发中也需要做好兼容性。 Safari和Chrome的不同滚动机制要说用户体验上Safari确实比Chrome更好，更精致。不得不提的">
@@ -320,9 +320,9 @@
 <li>控制DOM的transform去实现动画，可以避免页面的重绘和回流</li>
 <li>css3的transition优于js控制（js运行动画遇到阻塞会丢包）</li>
 <li>避免页面的重绘和回流所带来的影响（动画过程中不要对DOM取值，用css代替直接样式负值等等）</li>
-<li>开启GPU硬件加速<strong>translate3d(0,0,0)</strong></li>
+<li>开启GPU硬件加速translate3d(0,0,0)</li>
 </ul>
-<h1 id="视频播放控件是不一样的"><a href="#视频播放控件是不一样的" class="headerlink" title="视频播放控件是不一样的"></a><video>视频播放控件是不一样的</video></h1><p><code>&lt;video&gt;</code>是各大厂商自己做的，不同很正常，用vide需谨慎。<br>说一点，ios Safari视频会自动全屏，在代码中我们可以在video标签加webkit-playsinline属性禁止掉。</p>
+<h1 id="H5视频播放控件是不一样的"><a href="#H5视频播放控件是不一样的" class="headerlink" title="H5视频播放控件是不一样的"></a>H5视频播放控件是不一样的</h1><p><code>&lt;video&gt;</code>的视频控件是各大厂商自己做的，不同很正常，用vide需谨慎。<br>说一点，ios Safari视频会自动全屏，在代码中我们可以在video标签加webkit-playsinline属性禁止掉。</p>
 
       
     </div>
@@ -479,7 +479,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Safari和Chrome的不同滚动机制"><span class="nav-number">1.</span> <span class="nav-text">Safari和Chrome的不同滚动机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Safari给一些无法点击的元素绑定click事件会无法触发"><span class="nav-number">2.</span> <span class="nav-text">Safari给一些无法点击的元素绑定click事件会无法触发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写Dom动画往往在ios-Safari上流畅，在安卓Chrome上卡顿"><span class="nav-number">3.</span> <span class="nav-text">写Dom动画往往在ios Safari上流畅，在安卓Chrome上卡顿</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#视频播放控件是不一样的"><span class="nav-number">4.</span> <span class="nav-text">视频播放控件是不一样的</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Safari和Chrome的不同滚动机制"><span class="nav-number">1.</span> <span class="nav-text">Safari和Chrome的不同滚动机制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Safari给一些无法点击的元素绑定click事件会无法触发"><span class="nav-number">2.</span> <span class="nav-text">Safari给一些无法点击的元素绑定click事件会无法触发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#写Dom动画往往在ios-Safari上流畅，在安卓Chrome上卡顿"><span class="nav-number">3.</span> <span class="nav-text">写Dom动画往往在ios Safari上流畅，在安卓Chrome上卡顿</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#H5视频播放控件是不一样的"><span class="nav-number">4.</span> <span class="nav-text">H5视频播放控件是不一样的</span></a></li></ol></div>
             
 
           </div>
